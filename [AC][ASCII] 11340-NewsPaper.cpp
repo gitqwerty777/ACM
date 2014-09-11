@@ -17,7 +17,7 @@ int main(){
       //      printf("in=%s\n",in);
       scanf("%c %lld\n", &p);
       //      printf("-> %c = %lld, in[0] = %d\n", c, p, in[0]);
-      trans[in[0]+128] = p;//It should be 128, I guess it's set to avoid ASCII control code(not the real input)
+      trans[in[0]+128] = p;//It should greater than 128, I guess it's set to avoid ASCII control code(not the real input)
       //I am not sure
     }
     scanf("%d\n", &L);
