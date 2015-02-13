@@ -2,7 +2,7 @@
 #include <algorithm>
 using namespace std;
 
-struct Node{
+struct Node{//rectangle
 	double x1, x2, y1, y2;
 };
 struct Node n[100];
@@ -30,9 +30,9 @@ int main(){
 		sort(y, y + 2*N);
 		double ans = 0;
 		for(int i = 0; i < 2*N - 1; i ++)
-			for(int j = 0; j < 2*N-1; j++)
+			for(int j = 0; j < 2*N-1; j++)//select a rectangle(seperate by edge provided)
 				for(int k = 0; k < N; k ++)
-					if(n[k].x1 <= x[i] && n[k].x2 >= x[i+1] && n[k].y1 <= y[j] && n[k].y2 >= y[j+1]){
+					if(n[k].x1 <= x[i] && n[k].x2 >= x[i+1] && n[k].y1 <= y[j] && n[k].y2 >= y[j+1]){//if this rectangle is in one of the rectangle, add it to answer
 						ans += (x[i+1]-x[i])*(y[j+1]-y[j]);
 						break;
 					}
