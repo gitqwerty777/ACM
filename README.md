@@ -1,5 +1,5 @@
-UVA Online Judge Code
+Online Judge Code
 =====
 Just for personal preservation.
-UVA account: HCL(WeAreWorld)
 
+UVA account: HCL(WeAreWorld)
