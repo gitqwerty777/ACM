@@ -13,7 +13,7 @@ int main(){
       scanf("%d", &ans[i][j]);
 
   max = ans[0][0];
-    for(int i = 0; i < N; i++){
+  for(int i = 0; i < N; i++){
     int p = 0;
     for(int j = 0; j < N; j++){
       p += ans[j][i];

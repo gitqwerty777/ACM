@@ -13,11 +13,11 @@ int main(){
     ans = 0;
     if(l > 10){//speed up
       //12 and 1
-    if(s[0] == s[l-1])
-      ans++;
-    if(s[0] == s[l-2] && s[1] == s[l-1])
-      ans++;
-    //剛好三個?
+      if(s[0] == s[l-1])
+	ans++;
+      if(s[0] == s[l-2] && s[1] == s[l-1])
+	ans++;
+      //剛好三個?
       char end[4];
       end[0] = s[l-3];
       end[1] = s[l-2];
@@ -32,9 +32,7 @@ int main(){
 	char* st = &s[0];
 	char* en = &s[l-3];
 	while(tempp != st){
-	  //	  printf("en = %c tempp = %c\n", *en, *tempp);
 	  if(*en != *tempp){
-	    //	    printf("not the same\n");
 	    isans = false;
 	    break;
 	  }
