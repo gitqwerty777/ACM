@@ -5,6 +5,7 @@
 using namespace std;
 
 //http://www.csie.ntnu.edu.tw/~u91029/Component.html#1
+// problem meaning: find point to make the graph disconnected
 
 int N;
 int count;
