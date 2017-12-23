@@ -37,37 +37,67 @@ bool cmp(Item a, Item b)
 // Returns bound of profit in subtree rooted with u.
 // This function mainly uses Greedy solution to find
 // an upper bound on maximum profit.
-int bound(Node& u)
+int bound(const Node& previousu, Node& u, bool isAdd)
 {
   int profit_bound = u.profit;
   int totweight = u.weight;
   int j = u.level+1;
+  if(u.weight > W)
+    return 0;
   //because u.boundIndex <= v.boundIndex;
 
   //TODO: log(n), should remove
-  int index = std::upper_bound(weightSum+j, weightSum+N, W-u.weight+weightSum[j]) - (weightSum);
-  if(index == N){
-    totweight += weightSum[N-1] - weightSum[u.level];
-    profit_bound += profitSum[N-1] - profitSum[u.level];
-  } else {
-    totweight += weightSum[index] - weightSum[u.level];
-    profit_bound += profitSum[index] - profitSum[u.level];
-  }
-  j = index;
-  u.boundIndex = index;
+  /*if(previousu.boundIndex != -1){//has previous bound
+    j = previousu.boundIndex;
+    //printf("boundweight %d, minus previous level weight %d\n", previousu.boundWeight, arr[previousu.level].weight);
+    totweight = previousu.boundWeight - arr[previousu.level].weight;
+    assert(totweight <= W);
+    if(isAdd)
+      profit_bound = previousu.boundProfit - arr[previousu.level].value;
+    else
+      profit_bound = previousu.boundProfit;
+    while ((j < N) && (totweight + arr[j].weight <= W))
+    {
+      totweight += arr[j].weight;
+      profit_bound += arr[j].value;
+      j++;
+    }
+    u.boundIndex = j;
+    } else {//doesn't have previous bound*/
+  //fprintf(stderr, "weightsum\n");
+  //for(int i = 0; i < N; i++){
+  //    fprintf(stderr, "%d ", weightSum[i]);
+  //}
+    int index = std::upper_bound(weightSum+j, weightSum+N, W-u.weight+weightSum[j-1]) - (weightSum);
+    if(index == N){
+      totweight += weightSum[N-1] - weightSum[u.level];
+      profit_bound += profitSum[N-1] - profitSum[u.level];
+    } else {
+      totweight += weightSum[index-1] - weightSum[u.level];
+      profit_bound += profitSum[index-1] - profitSum[u.level];
+    }
+    j = index;
+    u.boundIndex = index;
+    //}
   u.boundWeight = totweight;
   u.boundProfit = profit_bound;
 
-  /*j = u.level+1;
-  totweight = u.weight;
-  profit_bound = u.profit;
-  while ((j < N) && (totweight + arr[j].weight <= W))
+  j = u.level+1;
+  int totweight_real = u.weight;
+  int profit_bound_real = u.profit;
+  while ((j < N) && (totweight_real + arr[j].weight <= W))
   {
-    totweight += arr[j].weight;
-    profit_bound += arr[j].value;
+    totweight_real += arr[j].weight;
+    profit_bound_real += arr[j].value;
     j++;
   }
-  */
+  //fprintf(stderr, "index     %d real %d\n", index, j);
+  //fprintf(stderr, "totweight %d real %d\n", totweight, totweight_real);
+  //fprintf(stderr, "profit    %d real %d\n", profit_bound, profit_bound_real);
+  assert(j == index);
+  assert(totweight == totweight_real);
+  assert(profit_bound == profit_bound_real);
+
 
   //include last item partially to upper bound
   if (j < N)
@@ -75,9 +105,9 @@ int bound(Node& u)
       arr[j].weight;
   return profit_bound;
 }
-int bound2(Node& u){
-  return bound(u);
-}
+//int bound2(Node& u){
+//  return bound(u);
+//}
 
 // Returns maximum profit we can get with capacity W
 int knapsack()
@@ -88,8 +118,8 @@ int knapsack()
   profitSum[0] = arr[0].value;
   weightSum[0] = arr[0].weight;
   for(int i = 0; i < N; i++){
-    profitSum[i] += profitSum[i-1] + arr[i].value;
-    weightSum[i] += weightSum[i-1] + arr[i].weight;
+    profitSum[i] = profitSum[i-1] + arr[i].value;
+    weightSum[i] = weightSum[i-1] + arr[i].weight;
   }
   // make a queue for traversing the node
   queue<Node> Q;
@@ -123,7 +153,7 @@ int knapsack()
       } else {
         // Get the upper bound on profit to decide
         // whether to add v to Q or not.
-        v.bound = bound(v);
+        v.bound = bound(u, v, true);
         //printf("u boundindex %d, v boundindex %d\n", u.boundIndex, v.boundIndex);
         if (v.bound > maxProfit)
           Q.push(v);
@@ -133,11 +163,13 @@ int knapsack()
     //not choose current level's item
     v.weight = u.weight;
     v.profit = u.profit;
-    v.bound = bound2(v);
+    if(v.weight <= W){
+      v.bound = bound(u, v, false);
     //printf("u boundindex %d, v boundindex %d\n", u.boundIndex, v.boundIndex);
     //assert(u.boundIndex <= v.boundIndex);
-    if (v.bound > maxProfit)
-      Q.push(v);
+      if (v.bound > maxProfit)
+        Q.push(v);
+    }
   }
   return maxProfit;
 }
